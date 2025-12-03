@@ -19,3 +19,12 @@ D:\SEMESTER 3\PBO\TUBES\TUBES_PBO_AgriFarm\demo\src\main\java\com\agrifarm\farme
 D:\SEMESTER 3\PBO\TUBES\TUBES_PBO_AgriFarm\demo\src\main\java\com\agrifarm\dao\PlantDAO.java
 D:\SEMESTER 3\PBO\TUBES\TUBES_PBO_AgriFarm\demo\src\main\java\com\agrifarm\manager\FarmManager.java
 D:\SEMESTER 3\PBO\TUBES\TUBES_PBO_AgriFarm\demo\src\main\java\com\agrifarm\App.java
+C:\Users\mjolmile\Documents\TUBES PBO\demo\src\main\java\com\agrifarm\farmer\DripIrrigation.java
+C:\Users\mjolmile\Documents\TUBES PBO\demo\src\main\java\com\agrifarm\farmer\Farmer.java
+C:\Users\mjolmile\Documents\TUBES PBO\demo\src\main\java\com\agrifarm\farmer\ManualIrrigation.java
+C:\Users\mjolmile\Documents\TUBES PBO\demo\src\main\java\com\agrifarm\model\Plant.java
+C:\Users\mjolmile\Documents\TUBES PBO\demo\src\main\java\com\agrifarm\farmer\AutomaticIrrigation.java
+C:\Users\mjolmile\Documents\TUBES PBO\demo\src\main\java\com\agrifarm\farmer\IrrigationStrategy.java
+C:\Users\mjolmile\Documents\TUBES PBO\demo\src\main\java\com\agrifarm\App.java
+C:\Users\mjolmile\Documents\TUBES PBO\demo\src\main\java\com\agrifarm\main\Main.java
+C:\Users\mjolmile\Documents\TUBES PBO\demo\src\main\java\com\agrifarm\config\DatabaseConfig.java

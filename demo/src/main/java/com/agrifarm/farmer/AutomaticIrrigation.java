@@ -1,5 +1,7 @@
 package com.agrifarm.farmer;
 
+import com.agrifarm.model.Plant;
+
 public class AutomaticIrrigation implements IrrigationStrategy {
     @Override
     public void irrigate(Plant plant) {
