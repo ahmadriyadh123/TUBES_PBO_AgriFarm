@@ -18,7 +18,6 @@ public class FarmManager {
 
     // ==== Private Constructor ====
     private FarmManager() {
-        // Inisialisasi DAO
         this.farmerDAO = new FarmerDAO();
         this.fieldDAO = new FieldDAO();
         this.plantDAO = new PlantDAO();
@@ -40,19 +39,19 @@ public class FarmManager {
 
     // ---- Register Farmer ----
     public void registerFarmer(Farmer farmer) {
-        farmerDAO.insert(farmer);
+        farmerDAO.save(farmer);
         System.out.println("✔ Farmer registered: " + farmer.getName());
     }
 
     // ---- Menambah Lahan ----
     public void addField(Field field) {
-        fieldDAO.insert(field);
+        fieldDAO.save(field);
         System.out.println("✔ Field added: " + field.getLocation());
     }
 
     // ---- Menambah Plant ----
     public void addPlant(Plant plant) {
-        plantDAO.insert(plant);
+        plantDAO.save(plant);
         System.out.println("✔ Plant added: " + plant.getName());
     }
 
@@ -65,7 +64,7 @@ public class FarmManager {
     // ---- Menyimpan Log Penyiraman ----
     public void logIrrigation(int fieldId, double water) {
         IrrigationLog log = new IrrigationLog(fieldId, water);
-        irrigationLogDAO.insert(log);
+        irrigationLogDAO.save(log);
 
         System.out.println("✔ Irrigation logged for Field " + fieldId);
     }

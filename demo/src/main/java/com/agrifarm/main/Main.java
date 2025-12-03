@@ -2,7 +2,7 @@ package com.agrifarm.main;
 
 import java.util.Scanner;
 import com.agrifarm.model.Plant;
-import com.agrifarm.farmer.Farmer;
+import com.agrifarm.model.Farmer;
 import com.agrifarm.farmer.ManualIrrigation;
 import com.agrifarm.farmer.AutomaticIrrigation;
 import com.agrifarm.farmer.DripIrrigation;
@@ -16,7 +16,7 @@ public class Main {
         System.out.print("Masukkan Nama Petani: ");
         String farmerName = input.nextLine();
 
-        Farmer pakTani = new Farmer(farmerName, 5); 
+        Farmer pakTani = new Farmer(farmerName); 
         
         Plant currentPlant = null; 
 

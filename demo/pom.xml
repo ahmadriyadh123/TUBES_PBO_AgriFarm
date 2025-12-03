@@ -45,6 +45,14 @@
                     <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.agrifarm.main.Main</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
 
         <pluginManagement>
@@ -84,11 +92,4 @@
             </plugins>
         </pluginManagement>
     </build>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-  </properties>
-
-
 </project>

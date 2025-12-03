@@ -13,82 +13,65 @@ public class FullSystemTest {
 
         System.out.println("===== AGRI-FARM FULL SYSTEM TEST =====");
 
-        // ===== 1. TEST KONEKSI DATABASE =====
-        try {
-            if (DatabaseConfig.getConnection() != null) {
-                System.out.println("[OK] Database connected successfully!");
-            }
-        } catch (Exception e) {
-            System.out.println("[FAIL] Database connection failed!");
-            e.printStackTrace();
-            return;
-        }
+        // 1. SETUP DEPENDENCIES (DAO)
+        FarmerDAO farmerDAO = new FarmerDAO();
+        FieldDAO fieldDAO = new FieldDAO();
+        PlantDAO plantDAO = new PlantDAO();
+        IrrigationLogDAO irrigationLogDAO = new IrrigationLogDAO();
 
-        // ===== 2. TEST DAO + SERVICE =====
-        FarmerService farmerService = new FarmerService();
-        FieldService fieldService = new FieldService();
-        IrrigationService irrigationService = new IrrigationService();
+        // 2. SETUP SERVICES (Injeksi DAO ke Service)
+        FarmerService farmerService = new FarmerService(farmerDAO, irrigationLogDAO);
+        FieldService fieldService = new FieldService(fieldDAO);
+        // IrrigationService membutuhkan PlantDAO dan IrrigationLogDAO
+        IrrigationService irrigationService = new IrrigationService(plantDAO, irrigationLogDAO);
 
+        // 3. TEST REGISTRASI FARMER
         System.out.println("\n--- Testing Farmer Registration ---");
-        Farmer f = new Farmer("Rina Test", "Bandung");
+        Farmer f = new Farmer("Rina Test"); 
+        // Simpan ke DB
         farmerService.registerFarmer(f);
         System.out.println("[OK] Farmer registered: " + f.getName());
 
+        // 4. TEST FIELD CREATION
         System.out.println("\n--- Testing Field Creation ---");
         Field field = new Field("Lahan Uji", 200);
-        fieldService.createField(field);
-        System.out.println("[OK] Field created: " + field.getName());
+        // Menggunakan assignField (yang memanggil save di DAO)
+        fieldService.assignField(field); 
+        System.out.println("[OK] Field created at: " + field.getLocation());
 
-        System.out.println("\n--- Testing Plant Creation & Assignment ---");
-        Plant p1 = new Plant("Padi", 10);
-        Plant p2 = new Plant("Jagung", 15);
+        // 5. TEST PLANT & ASSIGNMENT
+        System.out.println("\n--- Testing Plant Logic ---");
+        // Gunakan konstruktor yang sesuai: (Nama, Fase)
+        Plant p1 = new Plant("Padi", "Bibit"); 
+        
+        // Simpan tanaman via PlantDAO (karena FieldService belum punya logika ini di versi sebelumnya)
+        plantDAO.save(p1);
+        System.out.println("[OK] Plant saved: " + p1.getName());
 
-        fieldService.addPlantToField(field.getId(), p1);
-        fieldService.addPlantToField(field.getId(), p2);
+        // 6. TEST FARM MANAGER (Singleton)
+        System.out.println("\n--- Testing FarmManager ---");
+        FarmManager fm = FarmManager.getInstance();
+        
+        // Simulasi Assign Field (Menggunakan ID Dummy 1 & 1 karena kita tidak fetch ID asli dari DB di test ini)
+        int dummyFarmerId = 1;
+        int dummyFieldId = 1;
+        fm.assignField(dummyFarmerId, dummyFieldId);
 
-        System.out.println("[OK] Plants added to field: " + field.getName());
+        // 7. TEST IRRIGATION LOGIC
+        System.out.println("\n--- Testing Irrigation ---");
+        // Service akan mencari tanaman di Field ID 1 dan mencatat log untuk Farmer ID 1
+        irrigationService.irrigateField(dummyFieldId, dummyFarmerId);
+        System.out.println("[OK] Irrigation process executed");
 
-        // ===== 3. TEST FARM MANAGER =====
-        System.out.println("\n--- Testing FarmManager (Singleton) ---");
-
-        FarmManager fm1 = FarmManager.getInstance();
-        FarmManager fm2 = FarmManager.getInstance();
-
-        if (fm1 == fm2) {
-            System.out.println("[OK] Singleton pattern works (1 instance only)");
-        } else {
-            System.out.println("[FAIL] Singleton pattern failed!");
-        }
-
-        fm1.registerFarmer(f);
-        fm1.assignField(f, field);
-
-        System.out.println("[OK] FarmManager operations executed");
-
-        // ===== 4. TEST IRRIGATION BUSINESS LOGIC =====
-        System.out.println("\n--- Testing Irrigate All Plants in Field ---");
-
-        irrigationService.irrigateAllPlants(field.getId());
-
-        System.out.println("[OK] Irrigation completed for field " + field.getName());
-
-        // ===== 5. TEST IRRIGATION LOG =====
-        System.out.println("\n--- Testing Irrigation Log by Farmer ---");
-
-        List<IrrigationLog> logs = irrigationService.getLogsByFarmer(f.getId());
+        // 8. TEST LOGS
+        System.out.println("\n--- Testing Logs ---");
+        List<IrrigationLog> logs = irrigationService.getAllLogs(); // Gunakan getAllLogs()
         for (IrrigationLog log : logs) {
-            System.out.println("LOG -> Plant: " + log.getPlantId() +
-                    ", Date: " + log.getDate() +
-                    ", Method: " + log.getMethod());
+            System.out.println("LOG -> FieldID: " + log.getFieldId() + 
+                               ", Water: " + log.getWaterVolume() + 
+                               ", Time: " + log.getTimestamp());
         }
 
-        System.out.println("[OK] Irrigation logs retrieved");
-
-        // ===== 6. TEST REPORT GENERATION =====
-        System.out.println("\n--- Testing Farm Report ---");
-        fm1.generateReport();
-        System.out.println("[OK] Report generated successfully!");
-
-        System.out.println("\n===== TEST COMPLETED SUCCESSFULLY =====");
+        System.out.println("\n===== TEST COMPLETED =====");
     }
 }

@@ -9,14 +9,12 @@ public class IrrigationLog {
     private double waterVolume;
     private LocalDateTime timestamp;
 
-    // Constructor tanpa ID (untuk INSERT)
     public IrrigationLog(int fieldId, double waterVolume) {
         this.fieldId = fieldId;
         this.waterVolume = waterVolume;
         this.timestamp = LocalDateTime.now();
     }
 
-    // Constructor lengkap (untuk READ dari database)
     public IrrigationLog(int id, int fieldId, double waterVolume, LocalDateTime timestamp) {
         this.id = id;
         this.fieldId = fieldId;
