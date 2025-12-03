@@ -1,19 +1,14 @@
-package com.agrifarm.model;
+package model;
 
 public class Plant {
-    private String name;
-    private String growthStage;
 
-    public Plant(String name, String growthStage) {
+    private final String name;
+
+    public Plant(String name) {
         this.name = name;
-        this.growthStage = growthStage;
     }
 
     public String getName() {
         return name;
-    }
-
-    public String getGrowthStage() {
-        return growthStage;
     }
 }
