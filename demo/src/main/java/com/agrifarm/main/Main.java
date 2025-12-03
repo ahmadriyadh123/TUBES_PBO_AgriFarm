@@ -1,11 +1,11 @@
-package demo.src.com.agrifarm.main;
+package com.agrifarm.main;
 
 import java.util.Scanner;
-import demo.src.com.agrifarm.model.Plant;
-import demo.src.com.agrifarm.farmer.Farmer;
-import demo.src.com.agrifarm.farmer.ManualIrrigation;
-import demo.src.com.agrifarm.farmer.AutomaticIrrigation;
-import demo.src.com.agrifarm.farmer.DripIrrigation;
+import com.agrifarm.model.Plant;
+import com.agrifarm.farmer.Farmer;
+import com.agrifarm.farmer.ManualIrrigation;
+import com.agrifarm.farmer.AutomaticIrrigation;
+import com.agrifarm.farmer.DripIrrigation;
 
 public class Main {
 

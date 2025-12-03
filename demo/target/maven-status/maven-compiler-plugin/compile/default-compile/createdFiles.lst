@@ -1,0 +1,6 @@
+com\agrifarm\model\Plant.class
+com\agrifarm\farmer\IrrigationStrategy.class
+com\agrifarm\App.class
+com\agrifarm\farmer\ManualIrrigation.class
+com\agrifarm\farmer\DripIrrigation.class
+com\agrifarm\farmer\Farmer.class

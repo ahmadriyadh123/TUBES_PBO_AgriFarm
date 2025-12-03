@@ -1,6 +1,6 @@
-package demo.src.com.agrifarm.farmer;
+package com.agrifarm.farmer;
 
-import demo.src.com.agrifarm.model.Plant;
+import com.agrifarm.model.Plant;
 
 public class Farmer {
     private String name;
