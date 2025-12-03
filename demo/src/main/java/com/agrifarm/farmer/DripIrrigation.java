@@ -1,4 +1,4 @@
-package com.agrifarm.farmer;
+package demo.src.com.agrifarm.farmer;
 
 import com.agrifarm.model.Plant;
 

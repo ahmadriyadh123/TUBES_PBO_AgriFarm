@@ -1,0 +1,6 @@
+{
+    "java.project.sourcePaths": [
+        "src",
+        "demo/src/main/java/com/agrifarm/main"
+    ]
+}

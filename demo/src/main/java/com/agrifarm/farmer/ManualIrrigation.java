@@ -1,6 +1,6 @@
-package com.agrifarm.farmer;
+package demo.src.com.agrifarm.farmer;
 
-import com.agrifarm.model.Plant;
+import demo.src.com.agrifarm.model.Plant;
 
 public class ManualIrrigation implements IrrigationStrategy {
     @Override
