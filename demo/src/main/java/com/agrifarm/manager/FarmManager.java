@@ -3,8 +3,6 @@ package com.agrifarm.manager;
 import com.agrifarm.dao.*;
 import com.agrifarm.model.*;
 
-import java.util.List;
-
 public class FarmManager {
 
     // ==== Singleton Instance ====
@@ -44,14 +42,14 @@ public class FarmManager {
     }
 
     // ---- Menambah Lahan ----
-    public void addField(Field field) {
-        fieldDAO.save(field);
+    public void addField(Field field, int farmerId) {
+        fieldDAO.save(field, farmerId);
         System.out.println("✔ Field added: " + field.getLocation());
     }
 
     // ---- Menambah Plant ----
-    public void addPlant(Plant plant) {
-        plantDAO.save(plant);
+    public void addPlant(Plant plant, int fieldId) {
+        plantDAO.save(plant, fieldId);
         System.out.println("✔ Plant added: " + plant.getName());
     }
 
@@ -71,14 +69,7 @@ public class FarmManager {
 
     // ---- Generate Report (Contoh Sederhana) ----
     public void generateReport() {
-        List<Field> fields = fieldDAO.getAll();
-        List<Farmer> farmers = farmerDAO.getAll();
-        List<Plant> plants = plantDAO.getAll();
-
         System.out.println("====== FARM REPORT ======");
-        System.out.println("Total Farmers : " + farmers.size());
-        System.out.println("Total Fields  : " + fields.size());
-        System.out.println("Total Plants  : " + plants.size());
         System.out.println("=========================");
     }
 }

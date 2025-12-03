@@ -10,6 +10,7 @@ public class Plant {
     private String growthStage;
     private LocalDate estimatedHarvestDate;
     private String requiredSoilType;
+    private int growthProgress = 0;
 
     public Plant(String name, String growthStage) {
         this.name = name;
@@ -70,4 +71,16 @@ public class Plant {
     }
 
     public String getRequiredSoilType() { return requiredSoilType; }
+    public void grow(int percent) {
+        this.growthProgress += percent;
+        if (this.growthProgress > 100) this.growthProgress = 100;
+    }
+
+    public int getProgress() {
+        return growthProgress;
+    }
+
+    public boolean isHarvestReady() {
+        return growthProgress >= 100;
+    }
 }

@@ -2,50 +2,63 @@ package com.agrifarm.dao;
 
 import com.agrifarm.model.Farmer;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
-public class FarmerDAO {
+public class FarmerDAO extends AbstractDAO<Farmer> {
 
-    public void save(Farmer farmer) {
-        String sql = "INSERT INTO farmers (name, age, phone, address) VALUES (?, ?, ?, ?)";
+    // --- Implementasi Generic ---
 
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+    @Override
+    protected String getTableName() { return "farmers"; }
 
-            ps.setString(1, farmer.getName());
-            ps.setInt(2, farmer.getAge());
-            ps.setString(3, farmer.getPhone());
-            ps.setString(4, farmer.getAddress());
-            ps.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Override
+    protected String getInsertSql() {
+        return "INSERT INTO farmers (name, password, age, phone, address) VALUES (?, ?, ?, ?, ?)";
     }
 
-    public List<Farmer> getAll() {
-        List<Farmer> farmers = new ArrayList<>();
-        String sql = "SELECT * FROM farmers";
+    @Override
+    protected String getUpdateSql() {
+        return "UPDATE farmers SET name=?, password=?, age=?, phone=?, address=? WHERE id=?";
+    }
 
+    @Override
+    protected void setInsertParameters(PreparedStatement ps, Farmer farmer) throws SQLException {
+        ps.setString(1, farmer.getName());
+        ps.setString(2, farmer.getPassword());
+        ps.setInt(3, farmer.getAge());
+        ps.setString(4, farmer.getPhone());
+        ps.setString(5, farmer.getAddress());
+    }
+
+    @Override
+    protected void setUpdateParameters(PreparedStatement ps, Farmer farmer) throws SQLException {
+        setInsertParameters(ps, farmer); // Sama parameternya
+        ps.setInt(6, farmer.getId()); // Parameter terakhir untuk WHERE id=?
+    }
+
+    @Override
+    protected Farmer mapResultSetToEntity(ResultSet rs) throws SQLException {
+        return new Farmer(
+            rs.getInt("id"),
+            rs.getString("name"),
+            rs.getInt("age"),
+            rs.getString("phone"),
+            rs.getString("address")
+        );
+    }
+
+    // --- Metode Spesifik (Non-Generic) ---
+    
+    public Farmer login(String username, String password) {
+        String sql = "SELECT * FROM farmers WHERE name = ? AND password = ?";
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                Farmer farmer = new Farmer(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getInt("age"),
-                        rs.getString("phone"),
-                        rs.getString("address")
-                );
-                farmers.add(farmer);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToEntity(rs);
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return farmers;
+        } catch (Exception e) { e.printStackTrace(); }
+        return null;
     }
 }

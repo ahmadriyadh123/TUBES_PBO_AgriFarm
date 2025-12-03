@@ -27,7 +27,7 @@ public class FullSystemTest {
 
         // 3. TEST REGISTRASI FARMER
         System.out.println("\n--- Testing Farmer Registration ---");
-        Farmer f = new Farmer("Rina Test"); 
+        Farmer f = new Farmer("Rina Test", "password"); 
         // Simpan ke DB
         farmerService.registerFarmer(f);
         System.out.println("[OK] Farmer registered: " + f.getName());
@@ -36,7 +36,7 @@ public class FullSystemTest {
         System.out.println("\n--- Testing Field Creation ---");
         Field field = new Field("Lahan Uji", 200);
         // Menggunakan assignField (yang memanggil save di DAO)
-        fieldService.assignField(field); 
+        fieldService.assignField(field, f.getId()); 
         System.out.println("[OK] Field created at: " + field.getLocation());
 
         // 5. TEST PLANT & ASSIGNMENT
@@ -45,7 +45,7 @@ public class FullSystemTest {
         Plant p1 = new Plant("Padi", "Bibit"); 
         
         // Simpan tanaman via PlantDAO (karena FieldService belum punya logika ini di versi sebelumnya)
-        plantDAO.save(p1);
+        plantDAO.save(p1, field.getId());
         System.out.println("[OK] Plant saved: " + p1.getName());
 
         // 6. TEST FARM MANAGER (Singleton)

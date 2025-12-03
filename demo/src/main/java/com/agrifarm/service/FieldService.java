@@ -1,11 +1,10 @@
 package com.agrifarm.service;
 
 import com.agrifarm.dao.FieldDAO;
+import com.agrifarm.dao.GenericDAO;
 import com.agrifarm.model.Field;
 
-import java.util.List;
-
-public class FieldService {
+public class FieldService extends AbstractService<Field> {
 
     private final FieldDAO fieldDAO;
 
@@ -13,12 +12,23 @@ public class FieldService {
         this.fieldDAO = fieldDAO;
     }
 
-    public void assignField(Field field) {
-        fieldDAO.save(field);
+    @Override
+    protected GenericDAO<Field> getDAO() {
+        return fieldDAO;
     }
 
-    public List<Field> getFieldsByFarmer(int farmerId) {
+    // Method spesifik yang tidak ada di Generic
+    public Field getFieldByFarmer(int farmerId) {
         return fieldDAO.getByFarmer(farmerId);
     }
-
+    
+    // Method assignField (Logic spesifik)
+    public void assignField(Field field, int farmerId) {
+        // Logic bisnis: Validasi ukuran lahan misal tidak boleh negatif
+        if (field.getSize() <= 0) {
+            System.out.println(">> [ERROR] Ukuran lahan tidak valid.");
+            return;
+        }
+        fieldDAO.save(field, farmerId);
+    }
 }
