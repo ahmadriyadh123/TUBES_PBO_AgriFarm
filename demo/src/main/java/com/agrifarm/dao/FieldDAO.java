@@ -83,4 +83,28 @@ public class FieldDAO extends AbstractDAO<Field> {
         } catch (Exception e) { e.printStackTrace(); }
         return null;
     }
+
+    /**
+     * Metode ini dipanggil oleh FarmManager untuk menetapkan lahan ke petani.
+     */
+    public void assignField(int farmerId, int fieldId) {
+        String sql = "UPDATE fields SET owner_id = ? WHERE id = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, farmerId);
+            ps.setInt(2, fieldId);
+            int rows = ps.executeUpdate();
+            
+            if (rows > 0) {
+                System.out.println(">> [DB] Sukses assign Field ID " + fieldId + " ke Farmer ID " + farmerId);
+            } else {
+                System.out.println(">> [DB] Gagal assign field (ID tidak ditemukan)");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

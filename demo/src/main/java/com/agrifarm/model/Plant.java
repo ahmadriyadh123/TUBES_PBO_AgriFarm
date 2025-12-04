@@ -71,10 +71,6 @@ public class Plant {
     }
 
     public String getRequiredSoilType() { return requiredSoilType; }
-    public void grow(int percent) {
-        this.growthProgress += percent;
-        if (this.growthProgress > 100) this.growthProgress = 100;
-    }
 
     public int getProgress() {
         return growthProgress;

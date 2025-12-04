@@ -1,7 +1,5 @@
 package com.agrifarm.dao;
 
-public package com.agrifarm.dao;
-
 import java.util.List;
 
 public interface GenericDAO<T> {
@@ -10,6 +8,4 @@ public interface GenericDAO<T> {
     void delete(int id);
     T get(int id);
     List<T> getAll();
-} {
-    
 }
