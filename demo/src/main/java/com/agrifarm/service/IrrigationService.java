@@ -6,7 +6,7 @@ import com.agrifarm.dao.PlantDAO;
 import com.agrifarm.model.IrrigationLog;
 import com.agrifarm.model.Plant;
 
-import java.util.List;
+import java.util.*;
 
 // 1. Extends AbstractService agar punya fitur CRUD standar
 public class IrrigationService extends AbstractService<IrrigationLog> {
@@ -65,5 +65,47 @@ public class IrrigationService extends AbstractService<IrrigationLog> {
      */
     public List<IrrigationLog> getLogsByFarmer(int farmerId) {
         return irrigationLogDAO.getByFarmer(farmerId);
+    }
+
+    /**
+     * Fitur: Menghitung total pemakaian air per Lahan (Field).
+     * Implementasi: Menggunakan HashMap <FieldID, TotalAir>
+     */
+    public Map<Integer, Double> getWaterUsageStats(int farmerId) {
+        List<IrrigationLog> logs = getLogsByFarmer(farmerId);
+        
+        // Key: Field ID, Value: Total Volume Air
+        Map<Integer, Double> statsMap = new HashMap<>();
+
+        for (IrrigationLog log : logs) {
+            int fId = log.getFieldId();
+            double vol = log.getWaterVolume();
+
+            // Jika key sudah ada, tambahkan volumenya. Jika belum, inisialisasi.
+            statsMap.put(fId, statsMap.getOrDefault(fId, 0.0) + vol);
+        }
+        
+        return statsMap;
+    }
+
+    /**
+     * Fitur: Mengambil riwayat, tapi diurutkan dari yang TERBARU (Descending).
+     * Implementasi: Menggunakan Comparator.
+     */
+    public List<IrrigationLog> getSortedLogsByDate(int farmerId) {
+        List<IrrigationLog> logs = getLogsByFarmer(farmerId);
+
+        // Sorting Logika: Bandingkan Timestamp B dengan A (Descending)
+        Collections.sort(logs, new Comparator<IrrigationLog>() {
+            @Override
+            public int compare(IrrigationLog o1, IrrigationLog o2) {
+                return o2.getTimestamp().compareTo(o1.getTimestamp());
+            }
+        });
+
+        // Alternatif Modern (Java 8+):
+        // logs.sort((o1, o2) -> o2.getTimestamp().compareTo(o1.getTimestamp()));
+
+        return logs;
     }
 }

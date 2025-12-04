@@ -1,5 +1,6 @@
 package com.agrifarm.main;
 
+import java.util.Map;
 import java.util.Scanner;
 import com.agrifarm.model.*;
 import com.agrifarm.dao.FarmerDAO;
@@ -119,7 +120,8 @@ public class Main {
             System.out.println("2. Tanam Bibit");
             System.out.println("3. Tentukan Strategi Irigasi");
             System.out.println("4. Jalankan Irigasi");
-            System.out.println("5. Logout");
+            System.out.println("5. Statistik Penggunaan Air");
+            System.out.println("6. Logout");
             System.out.print("Pilih: ");
 
             String pilihan = input.nextLine();
@@ -200,10 +202,19 @@ public class Main {
                     if(currentPlant != null) pakTani.executeIrrigation(currentPlant);
                     else System.out.println(">> Tanaman kosong.");
                     break;
-
+                    
                 case "5":
+                    Map<Integer, Double> stats = irrigationService.getWaterUsageStats(pakTani.getId());
+                    System.out.println(">> Statistik Air per Lahan:");
+                    for (Map.Entry<Integer, Double> entry : stats.entrySet()) {
+                        System.out.println("   - Field ID " + entry.getKey() + ": " + entry.getValue() + " Liter");
+                    }
+                    break;
+
+                case "6":
                     sessionRunning = false;
                     break;
+
             }
         }
     }

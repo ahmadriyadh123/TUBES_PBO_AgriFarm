@@ -80,6 +80,11 @@ public class Plant {
         return growthProgress;
     }
 
+    public void grow(int percent) {
+        this.growthProgress += percent;
+        if (this.growthProgress > 100) this.growthProgress = 100;
+    }
+
     public boolean isHarvestReady() {
         return growthProgress >= 100;
     }
