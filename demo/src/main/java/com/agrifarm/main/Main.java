@@ -4,10 +4,12 @@ import java.util.Map;
 import java.util.Scanner;
 import com.agrifarm.model.*;
 import com.agrifarm.dao.FarmerDAO;
+import com.agrifarm.model.*;
 import com.agrifarm.dao.FieldDAO;
 import com.agrifarm.dao.IrrigationLogDAO;
 import com.agrifarm.dao.PlantDAO;
 import com.agrifarm.farmer.*;
+import com.agrifarm.service.IrrigationService;
 
 public class Main {
 
@@ -17,13 +19,15 @@ public class Main {
     private static PlantDAO plantDAO = new PlantDAO();
     private static IrrigationLogDAO logDAO = new IrrigationLogDAO();
 
+    private static IrrigationService irrigationService = new IrrigationService(logDAO, plantDAO);
+
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         boolean appRunning = true;
 
         while (appRunning) {
             System.out.println("\n=================================");
-            System.out.println("   AGRI-FARM (DATABASE VERSION)");
+            System.out.println("===========   AGRI-FARM ===========");
             System.out.println("=================================");
             System.out.println("1. Login");
             System.out.println("2. Registrasi Akun Baru");
