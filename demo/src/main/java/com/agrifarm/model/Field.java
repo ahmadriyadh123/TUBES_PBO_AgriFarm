@@ -1,6 +1,9 @@
 package com.agrifarm.model;
 
-public class Field {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Field implements IFieldComponent {
 
     private int id;
     private String location;
@@ -8,6 +11,8 @@ public class Field {
     private String soilType;
     private String status;
     private Farmer owner;
+
+    private List<IFieldComponent> components = new ArrayList<>();
 
     public Field(String location, double size) {
         this.location = location;
@@ -51,5 +56,36 @@ public class Field {
 
     public void setOwner(Farmer owner) {
         this.owner = owner;
+    }
+
+    public void addComponent(IFieldComponent component) {
+        components.add(component);
+    }
+
+    public void removeComponent(IFieldComponent component) {
+        components.remove(component);
+    }
+
+    public IFieldComponent getChild(int index) {
+        return components.get(index);
+    }
+
+    public void displayInfo() {
+        System.out.println(">> [Lahan] Lokasi: " + location + " (" + soilType + ")");
+        System.out.println(">> Isi Komponen:");
+        // Delegasi ke anak-anaknya
+        for (IFieldComponent comp : components) {
+            comp.displayInfo();
+        }
+    }
+
+    @Override
+    public double calculateYield() {
+        double totalYield = 0;
+        // Rekursif: Menjumlahkan yield dari semua children
+        for (IFieldComponent comp : components) {
+            totalYield += comp.calculateYield();
+        }
+        return totalYield;
     }
 }   

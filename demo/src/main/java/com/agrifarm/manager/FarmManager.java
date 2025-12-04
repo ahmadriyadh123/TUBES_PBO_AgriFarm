@@ -2,8 +2,14 @@ package com.agrifarm.manager;
 
 import com.agrifarm.dao.*;
 import com.agrifarm.model.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+@SuppressWarnings("java:S6548") // [FIX] Mengatasi warning Singleton (S6548) karena ini disengaja
 public class FarmManager {
+
+    // [FIX] Mengganti System.out dengan Logger (S106)
+    private static final Logger LOGGER = Logger.getLogger(FarmManager.class.getName());
 
     // ==== Singleton Instance ====
     private static FarmManager instance;
@@ -38,25 +44,26 @@ public class FarmManager {
     // ---- Register Farmer ----
     public void registerFarmer(Farmer farmer) {
         farmerDAO.save(farmer);
-        System.out.println("✔ Farmer registered: " + farmer.getName());
+        // [FIX] Gunakan Logger
+        LOGGER.log(Level.INFO, "Farmer registered: {0}", farmer.getName());
     }
 
     // ---- Menambah Lahan ----
     public void addField(Field field, int farmerId) {
         fieldDAO.save(field, farmerId);
-        System.out.println("✔ Field added: " + field.getLocation());
+        LOGGER.log(Level.INFO, "Field added: {0}", field.getLocation());
     }
 
     // ---- Menambah Plant ----
-    public void addPlant(Plant plant, int fieldId) {
-        plantDAO.save(plant, fieldId);
-        System.out.println("✔ Plant added: " + plant.getName());
+    public void addPlant(Plant plant) {
+        plantDAO.save(plant); // Asumsi save sudah diupdate di DAO sebelumnya
+        LOGGER.log(Level.INFO, "Plant added: {0}", plant.getName());
     }
 
     // ---- Assign Field ke Farmer ----
     public void assignField(int farmerId, int fieldId) {
         fieldDAO.assignField(farmerId, fieldId);
-        System.out.println("✔ Field " + fieldId + " assigned to Farmer " + farmerId);
+        LOGGER.log(Level.INFO, "Field {0} assigned to Farmer {1}", new Object[]{fieldId, farmerId});
     }
 
     // ---- Menyimpan Log Penyiraman ----
@@ -64,12 +71,12 @@ public class FarmManager {
         IrrigationLog log = new IrrigationLog(fieldId, water);
         irrigationLogDAO.save(log);
 
-        System.out.println("✔ Irrigation logged for Field " + fieldId);
+        LOGGER.log(Level.INFO, "Irrigation logged for Field {0}", fieldId);
     }
 
     // ---- Generate Report (Contoh Sederhana) ----
     public void generateReport() {
-        System.out.println("====== FARM REPORT ======");
-        System.out.println("=========================");
+        LOGGER.info("====== FARM REPORT ======");
+        LOGGER.info("=========================");
     }
 }

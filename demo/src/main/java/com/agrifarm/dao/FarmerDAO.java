@@ -4,9 +4,6 @@ import com.agrifarm.model.Farmer;
 import java.sql.*;
 
 public class FarmerDAO extends AbstractDAO<Farmer> {
-
-    // --- Implementasi Generic ---
-
     @Override
     protected String getTableName() { return "farmers"; }
 
@@ -31,8 +28,8 @@ public class FarmerDAO extends AbstractDAO<Farmer> {
 
     @Override
     protected void setUpdateParameters(PreparedStatement ps, Farmer farmer) throws SQLException {
-        setInsertParameters(ps, farmer); // Sama parameternya
-        ps.setInt(6, farmer.getId()); // Parameter terakhir untuk WHERE id=?
+        setInsertParameters(ps, farmer);
+        ps.setInt(6, farmer.getId());
     }
 
     @Override
@@ -46,7 +43,6 @@ public class FarmerDAO extends AbstractDAO<Farmer> {
         );
     }
 
-    // --- Metode Spesifik (Non-Generic) ---
     
     public Farmer login(String username, String password) {
         String sql = "SELECT * FROM farmers WHERE name = ? AND password = ?";

@@ -24,7 +24,6 @@ public class IrrigationLogDAO extends AbstractDAO<IrrigationLog> {
     protected void setInsertParameters(PreparedStatement ps, IrrigationLog log) throws SQLException {
         ps.setInt(1, log.getFieldId());
         ps.setDouble(2, log.getWaterVolume());
-        // Asumsi kolom timestamp di DB support Timestamp/Datetime
         ps.setTimestamp(3, Timestamp.valueOf(log.getTimestamp()));
     }
 
@@ -44,7 +43,6 @@ public class IrrigationLogDAO extends AbstractDAO<IrrigationLog> {
         );
     }
     
-    // --- Spesifik ---
     public List<IrrigationLog> getByFarmer(int farmerId) {
         String sql = "SELECT l.* FROM irrigation_logs l JOIN fields f ON l.fieldId = f.id WHERE f.owner_id = ?";
         List<IrrigationLog> list = new ArrayList<>();
