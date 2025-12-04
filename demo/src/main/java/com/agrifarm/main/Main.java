@@ -144,26 +144,46 @@ public class Main {
                     }
                     break;
 
-                case "4": // EKSEKUSI & SIMPAN LOG
-                    if (currentPlant != null && myField != null) {
-                        // 1. Jalankan irigasi (Polimorfisme Strategy)
-                        double volume = pakTani.executeIrrigation(currentPlant);
+                case "4": // EKSEKUSI IRIGASI
+                    if (myField != null && pakTani != null) {
+                        List<Plant> plantsFromDB = plantDAO.getByField(myField.getId());
+                        myField.getChildren().clear(); 
                         
-                        // 2. Jika ada air terpakai, simpan ke Database via Service
+                        // Masukkan semua tanaman DB ke dalam objek Field (Composite)
+                        for (Plant p : plantsFromDB) {
+                            myField.addComponent(p); 
+                        }
+
+                        // Tampilkan Menu Pilihan
+                        System.out.println("\n--- MODE PENYIRAMAN ---");
+                        System.out.println("1. Siram Satu Tanaman Saja (Leaf Mode)");
+                        System.out.println("2. Siram Seluruh Lahan Sekaligus (Composite Mode)");
+                        System.out.print("Pilih: ");
+                        String mode = input.nextLine();
+
+                        double volume = 0;
+
+                        if (mode.equals("1")) {
+                            if (currentPlant != null) {
+                                volume = pakTani.executeIrrigation(currentPlant);
+                            } else {
+                                System.out.println(">> Tanaman tidak ditemukan.");
+                            }
+                        } else {
+                            volume = pakTani.executeIrrigation(myField);
+                        }
+
+                        // 3. Simpan Log ke DB (Tetap jalan seperti biasa)
                         if (volume > 0) {
                             IrrigationLog log = new IrrigationLog(myField.getId(), volume);
-                            
-                            // Menggunakan service (Generic Service) untuk menyimpan
-                            // Service otomatis menghandle validasi dasar
-                            irrigationService.create(log); 
-                            
-                            System.out.println(">> [DB] Data penyiraman tersimpan.");
+                            irrigationService.create(log);
+                            System.out.println(">> [DB] Log irigasi tersimpan.");
                         }
+
                     } else {
-                        System.out.println(">> Pastikan Lahan & Tanaman tersedia, dan Strategi sudah dipilih (Menu 3).");
+                        System.out.println(">> Pastikan Lahan & Strategi siap.");
                     }
                     break;
-
                 case "5": // LIHAT RIWAYAT (Sorted by Date - Collection Framework)
                     List<IrrigationLog> history = irrigationService.getSortedLogsByDate(pakTani.getId());
                     System.out.println("\n=== RIWAYAT IRIGASI (Terbaru) ===");

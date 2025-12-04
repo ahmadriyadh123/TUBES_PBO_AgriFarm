@@ -1,8 +1,10 @@
 package com.agrifarm.model;
 
+import com.agrifarm.farmer.IrrigationStrategy;
 import java.time.LocalDate;
 
-public class Plant {
+// [COMPOSITE] Implementasi Interface Component
+public class Plant implements FieldComponent {
 
     private int id;
     private final String name;
@@ -12,6 +14,7 @@ public class Plant {
     private String requiredSoilType;
     private int growthProgress = 0;
 
+    // Constructor 1
     public Plant(String name, String growthStage) {
         this.name = name;
         this.growthStage = growthStage;
@@ -20,6 +23,7 @@ public class Plant {
         this.requiredSoilType = determineRequiredSoil(name);
     }
 
+    // Constructor 2 (Full)
     public Plant(int id, String name, String type, String growthStage, LocalDate estimatedHarvestDate) {
         this.id = id;
         this.name = name;
@@ -29,52 +33,23 @@ public class Plant {
         this.requiredSoilType = determineRequiredSoil(name);
     }
 
+    // Logic penentuan tanah
     private String determineRequiredSoil(String name) {
         String lowerName = name.toLowerCase();
-        if (lowerName.contains("padi")) {
-            return "Tanah Liat"; // Padi butuh air menggenang
-        } else if (lowerName.contains("jagung") || lowerName.contains("cabai") || lowerName.contains("tomat")) {
-            return "Tanah Gembur"; // Umumnya tanaman butuh tanah subur/gembur
-        } else if (lowerName.contains("kaktus") || lowerName.contains("kurma")) {
-            return "Tanah Pasir"; // Tanaman gurun
-        } else {
-            return "Tanah Gembur"; // Default untuk tanaman umum
-        }
+        if (lowerName.contains("padi")) return "Tanah Liat";
+        else if (lowerName.contains("kaktus") || lowerName.contains("kurma")) return "Tanah Pasir";
+        else return "Tanah Gembur";
     }
 
-    public boolean isCompatibleWithSoil(String fieldSoilType) {
-        return this.requiredSoilType.equalsIgnoreCase(fieldSoilType);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getStage() {
-        return growthStage;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getGrowthStage() {
-        return growthStage;
-    }
-
-    public LocalDate getEstimatedHarvestDate() {
-        return estimatedHarvestDate;
-    }
-
+    // --- Getter & Setter Original ---
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public String getStage() { return growthStage; }
+    public String getType() { return type; }
+    public String getGrowthStage() { return growthStage; }
+    public LocalDate getEstimatedHarvestDate() { return estimatedHarvestDate; }
     public String getRequiredSoilType() { return requiredSoilType; }
-
-    public int getProgress() {
-        return growthProgress;
-    }
+    public int getProgress() { return growthProgress; }
 
     public void grow(int percent) {
         this.growthProgress += percent;
@@ -83,5 +58,20 @@ public class Plant {
 
     public boolean isHarvestReady() {
         return growthProgress >= 100;
+    }
+
+    // =========================================================
+    // IMPLEMENTASI COMPOSITE (LEAF)
+    // =========================================================
+
+    @Override
+    public void displayInfo() {
+        System.out.println("    -> [Tanaman] " + name + " | Fase: " + growthStage + " | Progress: " + growthProgress + "%");
+    }
+
+    @Override
+    public double irrigate(IrrigationStrategy strategy) {
+        // Leaf langsung meminta strategy untuk menyiram dirinya sendiri
+        return strategy.irrigate(this);
     }
 }
