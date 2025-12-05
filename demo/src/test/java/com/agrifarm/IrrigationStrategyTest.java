@@ -12,22 +12,13 @@ public class IrrigationStrategyTest {
     // Test 1: Menguji Logika Flood Irrigation (Untuk Padi)
     @Test
     public void testFloodIrrigationLogic() {
-        // Setup Objek
         Plant padi = new Plant("Padi", "Dewasa");
         FloodIrrigation flood = new FloodIrrigation();
 
-        // Simpan progress awal
         int initialProgress = padi.getProgress();
-
-        // Eksekusi Strategy
         double waterUsed = flood.irrigate(padi);
 
-        // Assertions (Verifikasi)
-        // 1. Cek penggunaan air (Harus 50.0 sesuai kode FloodIrrigation)
         assertEquals("Air untuk flood harus 50.0 liter", 50.0, waterUsed, 0.01);
-        
-        // 2. Cek pertumbuhan (Harus bertambah 20)
-        // Karena Plant.grow menambah progress, kita cek apakah meningkat
         assertTrue("Progress tanaman harus bertambah", padi.getProgress() > initialProgress);
     }
 
@@ -46,12 +37,11 @@ public class IrrigationStrategyTest {
     // Test 3: Menguji Logika Drip Irrigation pada Bibit
     @Test
     public void testDripIrrigationForBibit() {
-        Plant bibit = new Plant("Cabai", "Bibit"); // Case Bibit
+        Plant bibit = new Plant("Cabai", "Bibit");
         DripIrrigation drip = new DripIrrigation();
 
         double waterUsed = drip.irrigate(bibit);
 
-        // Drip logic: Jika bibit, baseWater = 0.5
         assertEquals("Air untuk bibit harus 0.5 liter", 0.5, waterUsed, 0.01);
     }
 }

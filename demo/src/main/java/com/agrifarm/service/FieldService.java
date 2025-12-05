@@ -24,7 +24,6 @@ public class FieldService extends AbstractService<Field> {
     
     // Method assignField (Logic spesifik)
     public void assignField(Field field, int farmerId) {
-        // Logic bisnis: Validasi ukuran lahan misal tidak boleh negatif
         if (field.getSize() <= 0) {
             System.out.println(">> [ERROR] Ukuran lahan tidak valid.");
             return;

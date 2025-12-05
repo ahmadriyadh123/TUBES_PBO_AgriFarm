@@ -74,14 +74,12 @@ public class IrrigationService extends AbstractService<IrrigationLog> {
     public Map<Integer, Double> getWaterUsageStats(int farmerId) {
         List<IrrigationLog> logs = getLogsByFarmer(farmerId);
         
-        // Key: Field ID, Value: Total Volume Air
         Map<Integer, Double> statsMap = new HashMap<>();
 
         for (IrrigationLog log : logs) {
             int fId = log.getFieldId();
             double vol = log.getWaterVolume();
 
-            // Jika key sudah ada, tambahkan volumenya. Jika belum, inisialisasi.
             statsMap.put(fId, statsMap.getOrDefault(fId, 0.0) + vol);
         }
         
@@ -95,17 +93,13 @@ public class IrrigationService extends AbstractService<IrrigationLog> {
     public List<IrrigationLog> getSortedLogsByDate(int farmerId) {
         List<IrrigationLog> logs = getLogsByFarmer(farmerId);
 
-        // Sorting Logika: Bandingkan Timestamp B dengan A (Descending)
         Collections.sort(logs, new Comparator<IrrigationLog>() {
             @Override
             public int compare(IrrigationLog o1, IrrigationLog o2) {
                 return o2.getTimestamp().compareTo(o1.getTimestamp());
             }
         });
-
-        // Alternatif Modern (Java 8+):
-        // logs.sort((o1, o2) -> o2.getTimestamp().compareTo(o1.getTimestamp()));
-
+        
         return logs;
     }
 }

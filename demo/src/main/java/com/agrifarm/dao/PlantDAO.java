@@ -45,7 +45,6 @@ public class PlantDAO extends AbstractDAO<Plant> {
         );
     }
     
-    // --- Spesifik ---
     // Overload save untuk relasi dengan Field jika diperlukan
     public void save(Plant plant, int fieldId) {
          String sql = "INSERT INTO plants (field_id, name, type, growthStage, estimatedHarvestDate) VALUES (?, ?, ?, ?, ?)";
@@ -61,7 +60,7 @@ public class PlantDAO extends AbstractDAO<Plant> {
 
     public List<Plant> getByField(int fieldId) {
         List<Plant> list = new ArrayList<>();
-        String sql = "SELECT * FROM plants WHERE field_id = ?"; // Pastikan kolom field_id ada di DB
+        String sql = "SELECT * FROM plants WHERE field_id = ?";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, fieldId);
