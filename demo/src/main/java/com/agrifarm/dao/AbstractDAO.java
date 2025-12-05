@@ -16,7 +16,7 @@ public abstract class AbstractDAO<T> implements GenericDAO<T> {
     @Override
     public void save(T entity) {
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(getInsertSql(), Statement.RETURN_GENERATED_KEYS)) {
+            PreparedStatement ps = conn.prepareStatement(getInsertSql(), Statement.RETURN_GENERATED_KEYS)) {
             
             setInsertParameters(ps, entity);
             ps.executeUpdate();
@@ -35,7 +35,7 @@ public abstract class AbstractDAO<T> implements GenericDAO<T> {
     @Override
     public void update(T entity) {
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(getUpdateSql())) {
+            PreparedStatement ps = conn.prepareStatement(getUpdateSql())) {
             
             setUpdateParameters(ps, entity);
             ps.executeUpdate();

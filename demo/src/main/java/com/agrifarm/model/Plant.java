@@ -20,22 +20,22 @@ public class Plant implements IFieldComponent {
     private IrrigationStrategy activeStrategy;
 
     public Plant(String name, String growthStage) {
-        this.name = name;
+        this.name = name.replace("Padi", "Padi");
         this.growthStage = growthStage;
         this.type = "Umum";
         this.estimatedHarvestDate = LocalDate.now().plusMonths(3);
-        this.requiredSoilType = determineRequiredSoil(name);
+        this.requiredSoilType = determineRequiredSoil(this.name);
         this.activeStrategy = new ManualIrrigation();
         this.estimatedYield = generateYieldPrediction();
     }
 
     public Plant(int id, String name, String type, String growthStage, LocalDate estimatedHarvestDate) {
         this.id = id;
-        this.name = name;
+        this.name = name.replace("Padi", "Padi");
         this.type = type;
         this.growthStage = growthStage;
         this.estimatedHarvestDate = estimatedHarvestDate;
-        this.requiredSoilType = determineRequiredSoil(name);
+        this.requiredSoilType = determineRequiredSoil(this.name);
         this.activeStrategy = new ManualIrrigation();
         this.estimatedYield = generateYieldPrediction();
     }
@@ -49,16 +49,18 @@ public class Plant implements IFieldComponent {
         } else if (lowerName.contains("kaktus") || lowerName.contains("kurma")) {
             return "Tanah Pasir"; // Tanaman gurun
         } else {
-            return "Tanah Gembur"; // Default untuk tanaman umum
+            return "Tanah Gembur";
         }
     }
-    
+
     private double generateYieldPrediction() {
-        // Simulasi logika bisnis: Padi ~5kg/rumpun, Cabai ~1kg/pohon
-        if (name.toLowerCase().contains("padi")) return 5.0;
-        if (name.toLowerCase().contains("cabai")) return 1.5;
-        if (name.toLowerCase().contains("jagung")) return 2.0;
-        return 1.0; // Default
+        if (name.toLowerCase().contains("padi"))
+            return 5.0;
+        if (name.toLowerCase().contains("cabai"))
+            return 1.5;
+        if (name.toLowerCase().contains("jagung"))
+            return 2.0;
+        return 1.0;
     }
 
     // --- IMPLEMENTASI COMPOSITE (LEAF) ---
@@ -70,7 +72,6 @@ public class Plant implements IFieldComponent {
 
     @Override
     public double calculateYield() {
-        // Leaf mengembalikan nilai miliknya sendiri
         return this.estimatedYield;
     }
 
@@ -110,7 +111,9 @@ public class Plant implements IFieldComponent {
         return estimatedHarvestDate;
     }
 
-    public String getRequiredSoilType() { return requiredSoilType; }
+    public String getRequiredSoilType() {
+        return requiredSoilType;
+    }
 
     public int getProgress() {
         return growthProgress;
@@ -118,9 +121,23 @@ public class Plant implements IFieldComponent {
 
     public void grow(int percent) {
         this.growthProgress += percent;
-        if (this.growthProgress > 100) this.growthProgress = 100;
+        if (this.growthProgress > 100)
+            this.growthProgress = 100;
+        updateGrowthStage();
     }
 
+    private void updateGrowthStage() {
+        if (growthProgress < 30) {
+            this.growthStage = "Bibit";
+        } else if (growthProgress < 70) {
+            this.growthStage = "Remaja";
+        } else if (growthProgress < 100) {
+            this.growthStage = "Dewasa";
+        } else {
+            this.growthStage = "Siap Panen";
+        }
+    }
+    
     public boolean isHarvestReady() {
         return growthProgress >= 100;
     }

@@ -61,7 +61,6 @@ public class Farmer {
 
     /**
      * Menjalankan irigasi sesuai strategi yang dipilih.
-     * Metode ini dipanggil di Main.java case 3.
      */
     public double executeIrrigation(Plant plant) {
         if (irrigationStrategy == null) {

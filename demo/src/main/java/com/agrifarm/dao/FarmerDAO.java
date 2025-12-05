@@ -42,7 +42,6 @@ public class FarmerDAO extends AbstractDAO<Farmer> {
             rs.getString("address")
         );
     }
-
     
     public Farmer login(String username, String password) {
         String sql = "SELECT * FROM farmers WHERE name = ? AND password = ?";
