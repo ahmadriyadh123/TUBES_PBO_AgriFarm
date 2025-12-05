@@ -50,9 +50,7 @@ public class Main {
     
     private static void runDashboard(Scanner input, Farmer pakTani) {
         boolean sessionRunning = true;
-    
         Plant selectedTargetPlant = null;
-
         while (sessionRunning) {
             Field myField = fieldDAO.getByFarmer(pakTani.getId());
         
