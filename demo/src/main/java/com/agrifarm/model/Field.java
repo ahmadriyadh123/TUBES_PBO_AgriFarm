@@ -2,8 +2,12 @@ package com.agrifarm.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Field implements IFieldComponent {
+
+    private static final Logger logger = Logger.getLogger(Field.class.getName());
 
     private int id;
     private String location;
@@ -33,7 +37,7 @@ public class Field implements IFieldComponent {
     public int getId() {
         return id;
     }
-    
+
     public String getLocation() {
         return location;
     }
@@ -71,8 +75,9 @@ public class Field implements IFieldComponent {
     }
 
     public void displayInfo() {
-        System.out.println(">> [Lahan] Lokasi: " + location + " (" + soilType + ")");
-        System.out.println(">> Isi Komponen:");
+        // Fix formatting
+        logger.log(Level.INFO, ">> [Lahan] Lokasi: {0} ({1})", new Object[] { location, soilType });
+        logger.info(">> Isi Komponen:");
         // Delegasi ke anak-anaknya
         for (IFieldComponent comp : components) {
             comp.displayInfo();
@@ -88,4 +93,8 @@ public class Field implements IFieldComponent {
         }
         return totalYield;
     }
-}   
+
+    public boolean isClaimed() {
+        return owner != null || (status != null && !status.equalsIgnoreCase("Available"));
+    }
+}

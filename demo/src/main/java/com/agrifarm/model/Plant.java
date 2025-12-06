@@ -1,11 +1,15 @@
 package com.agrifarm.model;
 
 import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.agrifarm.farmer.IrrigationStrategy;
 import com.agrifarm.farmer.ManualIrrigation;
 
 public class Plant implements IFieldComponent {
+
+    private static final Logger logger = Logger.getLogger(Plant.class.getName());
 
     private int id;
     private final String name;
@@ -63,11 +67,9 @@ public class Plant implements IFieldComponent {
         return 1.0;
     }
 
-    // --- IMPLEMENTASI COMPOSITE (LEAF) ---
-
     @Override
     public void displayInfo() {
-        System.out.println("   -> [Tanaman] " + name + " | Estimasi: " + estimatedYield + " kg");
+        logger.log(Level.INFO, "   -> [Tanaman] {0} | Estimasi: {1} kg", new Object[] { name, estimatedYield });
     }
 
     @Override
@@ -103,10 +105,6 @@ public class Plant implements IFieldComponent {
         return this.activeStrategy;
     }
 
-    public String getGrowthStage() {
-        return growthStage;
-    }
-
     public LocalDate getEstimatedHarvestDate() {
         return estimatedHarvestDate;
     }
@@ -137,7 +135,7 @@ public class Plant implements IFieldComponent {
             this.growthStage = "Siap Panen";
         }
     }
-    
+
     public boolean isHarvestReady() {
         return growthProgress >= 100;
     }
