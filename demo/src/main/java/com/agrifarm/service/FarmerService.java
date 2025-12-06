@@ -25,11 +25,11 @@ public class FarmerService extends AbstractService<Farmer> {
     public void registerFarmer(Farmer farmer) {
         // Contoh Logic Spesifik: Validasi password minimal
         if (farmer.getPassword().length() < 3) {
-            System.out.println(">> [VALIDASI] Password terlalu pendek!");
+            logger.warning(">> [VALIDASI] Password terlalu pendek!");
             return;
         }
         // Panggil method create milik Parent (AbstractService)
-        super.create(farmer); 
+        super.create(farmer);
     }
 
     // Fitur Login sangat spesifik untuk User/Farmer, jadi ditulis manual di sini

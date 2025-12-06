@@ -3,9 +3,12 @@ package com.agrifarm.model;
 import com.agrifarm.farmer.IrrigationStrategy;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Farmer {
+
+    private static final Logger logger = Logger.getLogger(Farmer.class.getName());
 
     private int id;
     private String name;
@@ -21,7 +24,7 @@ public class Farmer {
         this.name = name;
         this.password = password;
         this.ownedFields = new ArrayList<>();
-        this.age = 30; 
+        this.age = 30;
         this.phone = "-";
         this.address = "Desa Agrifarm";
     }
@@ -39,12 +42,29 @@ public class Farmer {
         return this.password.equals(inputPass);
     }
 
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public String getPassword() { return password; }
-    public int getAge() { return age; }
-    public String getPhone() { return phone; }
-    public String getAddress() { return address; }
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
 
     public List<Field> getOwnedFields() {
         return ownedFields;
@@ -56,7 +76,7 @@ public class Farmer {
 
     public void setStrategy(IrrigationStrategy irrigationStrategy) {
         this.irrigationStrategy = irrigationStrategy;
-        System.out.println(">> Strategi irigasi diubah untuk petani " + this.name);
+        logger.log(Level.INFO, ">> Strategi irigasi diubah untuk petani {0}", this.name);
     }
 
     /**
@@ -64,15 +84,28 @@ public class Farmer {
      */
     public double executeIrrigation(Plant plant) {
         if (irrigationStrategy == null) {
-            System.out.println(">> Peringatan: Strategi belum dipilih! Harap set strategi terlebih dahulu.");
+            logger.warning(">> Peringatan: Strategi belum dipilih! Harap set strategi terlebih dahulu.");
             return 0.0;
         } else {
             double waterUsed = irrigationStrategy.irrigate(plant);
-            
+
             if (waterUsed > 0) {
-                System.out.println(">> [LAPORAN] Total air: " + waterUsed + " Liter.");
+                logger.log(Level.INFO, ">> [LAPORAN] Total air: {0} Liter.", waterUsed);
             }
             return waterUsed;
         }
+    }
+
+    // Removed unused 'Field' parameter
+    public void performIrrigation(Plant plant) {
+        executeIrrigation(plant);
+    }
+
+    public void showHistory() {
+        logger.info("[HISTORY] Menampilkan riwayat irigasi (dummy)...");
+    }
+
+    public void showWaterUsageStats() {
+        logger.info("[STATS] Statistik penggunaan air (dummy)...");
     }
 }
