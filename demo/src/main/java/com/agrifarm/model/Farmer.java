@@ -4,7 +4,6 @@ import com.agrifarm.farmer.IrrigationStrategy;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class Farmer {
 
     private int id;
@@ -21,14 +20,15 @@ public class Farmer {
         this.name = name;
         this.password = password;
         this.ownedFields = new ArrayList<>();
-        this.age = 30; 
+        this.age = 30;
         this.phone = "-";
         this.address = "Desa Agrifarm";
     }
 
-    public Farmer(int id, String name, int age, String phone, String address) {
+    public Farmer(int id, String name, String password, int age, String phone, String address) {
         this.id = id;
         this.name = name;
+        this.password = password;
         this.age = age;
         this.phone = phone;
         this.address = address;
@@ -39,12 +39,29 @@ public class Farmer {
         return this.password.equals(inputPass);
     }
 
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public String getPassword() { return password; }
-    public int getAge() { return age; }
-    public String getPhone() { return phone; }
-    public String getAddress() { return address; }
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
 
     public List<Field> getOwnedFields() {
         return ownedFields;
@@ -68,7 +85,7 @@ public class Farmer {
             return 0.0;
         } else {
             double waterUsed = irrigationStrategy.irrigate(plant);
-            
+
             if (waterUsed > 0) {
                 System.out.println(">> [LAPORAN] Total air: " + waterUsed + " Liter.");
             }

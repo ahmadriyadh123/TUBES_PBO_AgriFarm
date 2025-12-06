@@ -5,7 +5,9 @@ import java.sql.*;
 
 public class FarmerDAO extends AbstractDAO<Farmer> {
     @Override
-    protected String getTableName() { return "farmers"; }
+    protected String getTableName() {
+        return "farmers";
+    }
 
     @Override
     protected String getInsertSql() {
@@ -35,25 +37,27 @@ public class FarmerDAO extends AbstractDAO<Farmer> {
     @Override
     protected Farmer mapResultSetToEntity(ResultSet rs) throws SQLException {
         return new Farmer(
-            rs.getInt("id"),
-            rs.getString("name"),
-            rs.getInt("age"),
-            rs.getString("phone"),
-            rs.getString("address")
-        );
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getString("password"),
+                rs.getInt("age"),
+                rs.getString("phone"),
+                rs.getString("address"));
     }
-    
+
     public Farmer login(String username, String password) {
         String sql = "SELECT * FROM farmers WHERE name = ? AND password = ?";
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return mapResultSetToEntity(rs);
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }

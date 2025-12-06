@@ -2,7 +2,7 @@ package com.agrifarm.main;
 
 import java.util.Scanner;
 import java.util.List;
-import java.util.Map; 
+import java.util.Map;
 
 import com.agrifarm.model.*;
 import com.agrifarm.dao.*;
@@ -12,9 +12,9 @@ import com.agrifarm.service.IrrigationService;
 public class Main {
     private static FarmerDAO farmerDAO = new FarmerDAO();
     private static FieldDAO fieldDAO = new FieldDAO();
-    
-    private static PlantDAO plantDAO = new PlantDAO();       
-    private static IrrigationLogDAO logDAO = new IrrigationLogDAO(); 
+
+    private static PlantDAO plantDAO = new PlantDAO();
+    private static IrrigationLogDAO logDAO = new IrrigationLogDAO();
 
     private static IrrigationService irrigationService = new IrrigationService(logDAO, plantDAO);
 
@@ -30,7 +30,7 @@ public class Main {
             System.out.println("2. Registrasi");
             System.out.println("3. Keluar");
             System.out.print("Pilih menu: ");
-            
+
             String menuAwal = input.nextLine();
 
             if (menuAwal.equals("1")) {
@@ -47,32 +47,34 @@ public class Main {
         }
         input.close();
     }
-    
+
     private static void runDashboard(Scanner input, Farmer pakTani) {
         boolean sessionRunning = true;
         Plant selectedTargetPlant = null;
         while (sessionRunning) {
             Field myField = fieldDAO.getByFarmer(pakTani.getId());
-        
+
             List<Plant> allPlants = null;
             if (myField != null) {
                 allPlants = plantDAO.getByField(myField.getId());
             }
-            
+
             System.out.println("\n---------------------------------");
             System.out.println("DASHBOARD PETANI: " + pakTani.getName().toUpperCase());
             System.out.println("---------------------------------");
-            System.out.println("Lahan        : " + (myField != null ? myField.getLocation() + " (" + myField.getSoilType() + ")" : "[BELUM ADA]"));
+            System.out.println("Lahan        : "
+                    + (myField != null ? myField.getLocation() + " (" + myField.getSoilType() + ")" : "[BELUM ADA]"));
 
             if (allPlants != null && !allPlants.isEmpty()) {
                 System.out.println("Total Tanaman: " + allPlants.size() + " Jenis");
                 System.out.print("Daftar       : ");
-                for(Plant p : allPlants) System.out.print("[" + p.getName() + "] ");
+                for (Plant p : allPlants)
+                    System.out.print("[" + p.getName() + "] ");
                 System.out.println();
             } else {
                 System.out.println("Tanaman      : [KOSONG]");
             }
-            
+
             if (selectedTargetPlant != null) {
                 System.out.println("Target Aksi  : >> " + selectedTargetPlant.getName() + " <<");
             } else {
@@ -93,7 +95,7 @@ public class Main {
             String pilihan = input.nextLine();
 
             switch (pilihan) {
-                case "1": 
+                case "1":
                     if (myField == null) {
                         System.out.println("\n--- PENDAFTARAN LAHAN BARU ---");
                         System.out.print("Lokasi Lahan : ");
@@ -108,36 +110,46 @@ public class Main {
                         System.out.print("Pilihan (1-5): ");
                         String soilChoice = input.nextLine();
 
-                        String soilType = "Tanah Gembur"; 
+                        String soilType = "Tanah Gembur";
 
                         switch (soilChoice) {
-                            case "1": soilType = "Tanah Liat"; break;
-                            case "2": soilType = "Tanah Pasir"; break;
-                            case "3": soilType = "Tanah Gembur"; break;
-                            case "4": soilType = "Tanah Lempung"; break;
-                            case "5": soilType = "Tanah Gambut"; break;
-                            default: 
+                            case "1":
+                                soilType = "Tanah Liat";
+                                break;
+                            case "2":
+                                soilType = "Tanah Pasir";
+                                break;
+                            case "3":
+                                soilType = "Tanah Gembur";
+                                break;
+                            case "4":
+                                soilType = "Tanah Lempung";
+                                break;
+                            case "5":
+                                soilType = "Tanah Gambut";
+                                break;
+                            default:
                                 System.out.println(">> Pilihan tidak valid! Menggunakan default (Gembur).");
                                 break;
-                        }   
-                        
+                        }
+
                         Field f = new Field(0, loc, 100, soilType, "Ready");
-                        
+
                         fieldDAO.save(f, pakTani.getId());
                         System.out.println(">> Lahan di " + loc + " dengan jenis " + soilType + " berhasil disimpan!");
-                        
+
                     } else {
                         System.out.println(">> Anda sudah memiliki lahan (" + myField.getSoilType() + ").");
                     }
                     break;
 
-                case "2": 
+                case "2":
                     if (myField != null) {
                         System.out.print("Nama Tanaman (cth: Padi, Jagung, Cabai): ");
-                        String pName = input.nextLine();                      
-                        
+                        String pName = input.nextLine();
+
                         Plant newPlant = new Plant(pName, "Bibit");
-                               
+
                         plantDAO.save(newPlant, myField.getId());
                         System.out.println(">> " + pName + " berhasil ditanam.");
                     } else {
@@ -145,39 +157,38 @@ public class Main {
                     }
                     break;
 
-                case "3": 
+                case "3":
                     if (allPlants == null || allPlants.isEmpty()) {
                         System.out.println(">> Tidak ada tanaman di lahan ini.");
                     } else {
                         System.out.println("\n--- PILIH TANAMAN UNTUK IRIGASI ---");
-                        
+
                         for (int i = 0; i < allPlants.size(); i++) {
                             Plant p = allPlants.get(i);
                             System.out.println((i + 1) + ". " + p.getName() + " (Fase: " + p.getStage() + ")");
                         }
-                        
+
                         System.out.print("Pilih Nomor Tanaman: ");
                         try {
                             int idx = Integer.parseInt(input.nextLine()) - 1;
 
                             if (idx >= 0 && idx < allPlants.size()) {
-                                
+
                                 selectedTargetPlant = allPlants.get(idx);
-                                
-                                System.out.println("\n>> [ANALISIS] Menganalisis " + selectedTargetPlant.getName() + "...");
-                                
+
+                                System.out.println(
+                                        "\n>> [ANALISIS] Menganalisis " + selectedTargetPlant.getName() + "...");
+
                                 String pName = selectedTargetPlant.getName().toLowerCase();
                                 String pStage = selectedTargetPlant.getStage();
 
-                                if (pName.contains("padi") || pName.contains("")) {
+                                if (pName.contains("padi")) {
                                     System.out.println(">> Tipe: Padi -> Butuh Flood Irrigation.");
                                     pakTani.setStrategy(new FloodIrrigation());
-                                } 
-                                else if (pStage.equalsIgnoreCase("Bibit")) {
+                                } else if (pStage.equalsIgnoreCase("Bibit")) {
                                     System.out.println(">> Tipe: Bibit -> Butuh Drip Irrigation.");
                                     pakTani.setStrategy(new DripIrrigation());
-                                } 
-                                else {
+                                } else {
                                     System.out.println(">> Tipe: Umum -> Menggunakan Sprinkler.");
                                     pakTani.setStrategy(new SprinklerIrrigation());
                                 }
@@ -185,7 +196,7 @@ public class Main {
 
                             } else {
                                 System.out.println(">> Pilihan salah.");
-                                selectedTargetPlant = null; 
+                                selectedTargetPlant = null;
                             }
                         } catch (Exception e) {
                             System.out.println(">> Input harus angka.");
@@ -193,14 +204,14 @@ public class Main {
                     }
                     break;
 
-                case "4": 
+                case "4":
                     if (selectedTargetPlant != null && myField != null) {
                         System.out.println("\n>> [EKSEKUSI] Menyiram tanaman: " + selectedTargetPlant.getName());
-                        
+
                         double volume = pakTani.executeIrrigation(selectedTargetPlant);
-                        
+
                         if (volume > 0) {
-                            
+
                             IrrigationLog log = new IrrigationLog(myField.getId(), volume);
                             irrigationService.create(log);
                             System.out.println(">> Data tersimpan untuk " + selectedTargetPlant.getName());
@@ -211,29 +222,32 @@ public class Main {
                     }
                     break;
 
-                case "5": 
+                case "5":
                     List<IrrigationLog> history = irrigationService.getSortedLogsByDate(pakTani.getId());
                     System.out.println("\n=== RIWAYAT IRIGASI (Terbaru) ===");
-                    if (history.isEmpty()) System.out.println("Belum ada data.");
-                    
+                    if (history.isEmpty())
+                        System.out.println("Belum ada data.");
+
                     for (IrrigationLog log : history) {
-                        System.out.println("- [" + log.getTimestamp() + "] Vol: " + log.getWaterVolume() + "L (Field " + log.getFieldId() + ")");
+                        System.out.println("- [" + log.getTimestamp() + "] Vol: " + log.getWaterVolume() + "L (Field "
+                                + log.getFieldId() + ")");
                     }
                     break;
 
-                case "6": 
+                case "6":
                     Map<Integer, Double> stats = irrigationService.getWaterUsageStats(pakTani.getId());
                     System.out.println("\n=== STATISTIK PENGGUNAAN AIR ===");
-                    if (stats.isEmpty()) System.out.println("Belum ada data.");
-                    
+                    if (stats.isEmpty())
+                        System.out.println("Belum ada data.");
+
                     for (Map.Entry<Integer, Double> entry : stats.entrySet()) {
                         System.out.println(">> Lahan ID " + entry.getKey() + " : Total " + entry.getValue() + " Liter");
                     }
                     break;
 
-                case "7": 
+                case "7":
                     if (myField != null) {
-                        Field compositeField = myField; 
+                        Field compositeField = myField;
                         List<Plant> dbPlants = plantDAO.getByField(compositeField.getId());
                         for (Plant p : dbPlants) {
                             compositeField.addComponent(p);
@@ -257,18 +271,18 @@ public class Main {
     }
 
     private static void handleRegister(Scanner input) {
-        System.out.print("Username: "); 
+        System.out.print("Username: ");
         String u = input.nextLine();
-        System.out.print("Password: "); 
+        System.out.print("Password: ");
         String p = input.nextLine();
         Farmer f = new Farmer(u, p);
-        farmerDAO.save(f); 
+        farmerDAO.save(f);
     }
 
     private static Farmer handleLogin(Scanner input) {
-        System.out.print("Username: "); 
+        System.out.print("Username: ");
         String u = input.nextLine();
-        System.out.print("Password: "); 
+        System.out.print("Password: ");
         String p = input.nextLine();
         return farmerDAO.login(u, p);
     }
