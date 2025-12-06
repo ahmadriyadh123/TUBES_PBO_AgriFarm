@@ -1,19 +1,24 @@
 package com.agrifarm.farmer;
 
 import com.agrifarm.model.Plant;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ManualIrrigation implements IrrigationStrategy {
+
+    private static final Logger logger = Logger.getLogger(ManualIrrigation.class.getName());
+
     @Override
     public double irrigate(Plant plant) {
-        int growthBonus = 10; 
+        int growthBonus = 10;
         plant.grow(growthBonus);
 
-        System.out.println(">> [Manual] Petani mengambil ember...");
-        System.out.println(">> [Manual] Menyiram " + plant.getName() + " secara kasar.");
-        
+        logger.info(">> [Manual] Petani mengambil ember...");
+        logger.log(Level.INFO, ">> [Manual] Menyiram {0} secara kasar.", plant.getName());
+
         double waterUsed = 10.0;
-        
-        System.out.println(">> [Info] Air terpakai: " + waterUsed + " Liter (Agak boros).");
+
+        logger.log(Level.INFO, ">> [Info] Air terpakai: {0} Liter (Agak boros).", waterUsed);
         return waterUsed;
     }
 }

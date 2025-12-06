@@ -2,51 +2,53 @@ package com.agrifarm.service;
 
 import com.agrifarm.dao.GenericDAO;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class AbstractService<T> implements GenericService<T> {
 
-    // Service butuh DAO untuk akses data
-    protected abstract GenericDAO<T> getDAO();
+    protected final Logger logger = Logger.getLogger(getClass().getName());
+
+    protected abstract GenericDAO<T> getDAO(); // Template Method
 
     @Override
     public void create(T entity) {
-        // CONTOH LOGIC GENERIC: Validasi Data Null
         if (entity == null) {
-            System.out.println(">> [ERROR] Data tidak boleh kosong!");
+            logger.severe(">> [ERROR] Data tidak boleh kosong!");
             return;
         }
-        
-        // Teruskan ke DAO
         getDAO().save(entity);
-        
-        // CONTOH LOGIC GENERIC: Logging Otomatis
-        System.out.println(">> [LOG] Data baru berhasil ditambahkan via Service.");
-    }
-
-    @Override
-    public void update(T entity) {
-        getDAO().update(entity);
-        System.out.println(">> [LOG] Data berhasil diperbarui via Service.");
-    }
-
-    @Override
-    public void delete(int id) {
-        // CONTOH LOGIC GENERIC: Cek keberadaan data sebelum hapus
-        if (getDAO().get(id) != null) {
-            getDAO().delete(id);
-            System.out.println(">> [LOG] Data ID " + id + " telah dihapus.");
-        } else {
-            System.out.println(">> [ERROR] Data ID " + id + " tidak ditemukan, gagal hapus.");
-        }
+        logger.info(">> [LOG] Data baru berhasil ditambahkan via Service.");
     }
 
     @Override
     public T getById(int id) {
-        return getDAO().get(id);
+        T data = getDAO().get(id); // Changed from getById to get to match GenericDAO
+        if (data != null) {
+            // Fix: Use formatting
+            logger.log(Level.INFO, ">> [LOG] Data ditemukan: {0}", data);
+        } else {
+            logger.log(Level.WARNING, ">> [LOG] Data dengan ID {0} tidak ditemukan.", id);
+        }
+        return data;
     }
 
     @Override
     public List<T> getAll() {
         return getDAO().getAll();
+    }
+
+    @Override
+    public void update(T entity) {
+        if (entity == null)
+            return;
+        getDAO().update(entity);
+        logger.info(">> [LOG] Data berhasil diperbarui.");
+    }
+
+    @Override
+    public void delete(int id) {
+        getDAO().delete(id);
+        logger.log(Level.INFO, ">> [LOG] Data dengan ID {0} telah dihapus.", id);
     }
 }

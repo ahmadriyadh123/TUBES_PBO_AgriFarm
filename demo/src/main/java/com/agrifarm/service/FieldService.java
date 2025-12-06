@@ -21,11 +21,11 @@ public class FieldService extends AbstractService<Field> {
     public Field getFieldByFarmer(int farmerId) {
         return fieldDAO.getByFarmer(farmerId);
     }
-    
+
     // Method assignField (Logic spesifik)
     public void assignField(Field field, int farmerId) {
         if (field.getSize() <= 0) {
-            System.out.println(">> [ERROR] Ukuran lahan tidak valid.");
+            logger.severe(">> [ERROR] Ukuran lahan tidak valid.");
             return;
         }
         fieldDAO.save(field, farmerId);
